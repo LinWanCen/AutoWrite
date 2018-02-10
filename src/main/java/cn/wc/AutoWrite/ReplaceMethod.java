@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * 例如：
  * <pre>
  * public String abc(String key) {
- *     return abc(key));
+ *     return abc(key);
  * }
  * </pre>
  */
@@ -47,7 +47,6 @@ public class ReplaceMethod extends BaseModifyFile {
                 sb.append("(");
                 // 包括右括号用于匹配，替换掉<>
                 String as = s.substring(i1, i2 + 1).replaceAll("<.*>", "");
-                s.contains("<");
                 Matcher matcher = ARGS_PATTERN.matcher(as);
                 boolean d = false;
                 while (matcher.find()) {
