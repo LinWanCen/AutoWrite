@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 /**
- * 自动将src/main/resources/类名中in目录下的文件处理后输出到out目录
+ * 自动将 src/main/resources/类名 中in目录下的文件处理后输出到out目录
  * <br>需重写protected void modify(BufferedReader r, BufferedWriter w) throws Exception {
  * <br>可以在主方法新建自身后运行execute()方法
  * <br>可以先运行一次创建好相应目录
