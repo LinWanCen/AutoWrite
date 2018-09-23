@@ -54,10 +54,9 @@ public class ReplaceAllMultiple extends BaseModifyFile {
             System.err.println("regexCharset and regexFile is null!");
             return;
         }
-        charsetName = args[0];
         // region 正则列表文件
         Path regexFile = Paths.get(args[1]);
-        List<String> regexList = Files.readAllLines(regexFile, Charset.forName(charsetName));
+        List<String> regexList = Files.readAllLines(regexFile, Charset.forName(args[0]));
         // 去掉前两行
         regexList.remove(0);
         regexList.remove(0);
