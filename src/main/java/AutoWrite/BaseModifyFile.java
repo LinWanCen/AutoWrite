@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * <br>需重写protected void modify(BufferedReader r, BufferedWriter w) throws Exception {
  */
 public abstract class BaseModifyFile {
-    private static String charsetName = "UTF-8";
+    public static String charsetName = "UTF-8";
 
     /** 业务逻辑，需重写 */
     protected abstract void modify(BufferedReader r, BufferedWriter w) throws Exception;
