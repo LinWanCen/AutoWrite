@@ -1,4 +1,4 @@
-package cn.wc.AutoWrite;
+package AutoWrite;
 
 import java.io.*;
 import java.util.regex.Matcher;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class ReplaceMethod extends BaseModifyFile {
 
     public static void main(String[] args) {
-        new ReplaceMethod().execute();
+        new ReplaceMethod().execute(args, 1, 2, 3);
     }
 
     private static final String METHOD_REGEX = ".* .*\\(.*\\).*\\{";

@@ -1,0 +1,42 @@
+Targets
+    Occurrences of 'AutoWrite' in Project
+Found Occurrences  (17 usages found)
+    Production  (17 usages found)
+        Unclassified occurrence  (15 usages found)
+            AutoWrite  (15 usages found)
+                  (2 usages found)
+                    find2tsv.bat  (1 usage found)
+                        1 java ReplaceAllMultiple regexFile/find2tsv.txt %1
+                    README.md  (1 usage found)
+                        1 # `AutoWrite`
+                in  (8 usages found)
+                    report.txt  (8 usages found)
+                        6             AutoWrite  (65 usages found)
+                        9                         1 java ReplaceAllMultiple regexFile/find2tsv.txt %1
+                        10                 wc.AutoWrite  (64 usages found)
+                        30                         78 File tempPath = new File(inPath.getParent(), "AutoWriteTemp");
+                        81             AutoWrite  (4 usages found)
+                        82                 wc.AutoWrite  (4 usages found)
+                        90             AutoWrite  (4 usages found)
+                        91                 wc.AutoWrite  (4 usages found)
+                wc.AutoWrite  (5 usages found)
+                    BaseModifyFile.java  (1 usage found)
+                        1 package wc.AutoWrite;
+                    GetSetDoc.java  (1 usage found)
+                        1 package wc.AutoWrite;
+                    POJODoc.java  (1 usage found)
+                        1 package wc.AutoWrite;
+                    ReplaceAllMultiple.java  (1 usage found)
+                        1 package wc.AutoWrite;
+                    ReplaceMethod.java  (1 usage found)
+                        1 package wc.AutoWrite;
+        Usage in string constants  (1 usage found)
+            AutoWrite  (1 usage found)
+                wc.AutoWrite  (1 usage found)
+                    BaseModifyFile.java  (1 usage found)
+                        74 File tempPath = new File(inPath.getParent(), "AutoWriteTemp");
+        Occurrence in XML descriptor  (1 usage found)
+            AutoWrite  (1 usage found)
+                  (1 usage found)
+                    pom.xml  (1 usage found)
+                        8 <artifactId>AutoWriteClass</artifactId>
