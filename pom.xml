@@ -22,5 +22,24 @@
                 </configuration>
             </plugin>
         </plugins>
+        <!-- 输出源码 -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.java</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/test/resources</directory>
+            </resource>
+        </resources>
     </build>
+  <!--<dependencies>-->
+    <!--<dependency>-->
+      <!--<groupId>commons-lang</groupId>-->
+      <!--<artifactId>commons-lang</artifactId>-->
+      <!--<version>2.6</version>-->
+    <!--</dependency>-->
+  <!--</dependencies>-->
 </project>

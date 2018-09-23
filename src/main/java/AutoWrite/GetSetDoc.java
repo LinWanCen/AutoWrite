@@ -1,4 +1,4 @@
-package cn.wc.AutoWrite;
+package AutoWrite;
 
 import java.io.*;
 import java.util.HashMap;
@@ -6,17 +6,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 为get/set方法添加字段上的文档注释
+ * get set 方法添加字段上的文档注释
  */
 public class GetSetDoc extends BaseModifyFile {
 
     public static void main(String[] args) {
-        new GetSetDoc().execute();
+        new GetSetDoc().execute(args, 1, 2, 3);
     }
 
     private static final String FIELD_REGEX = "[\\w ]* \\w*;";
     private static final Pattern FIELD_PATTERN = Pattern.compile("(?<= )(\\w*)(?=[;])");
-    private static final Pattern METHOD_PATTERN = Pattern.compile("(?<=et)(\\w*)(?=[\\(])");
+    private static final Pattern METHOD_PATTERN = Pattern.compile("(?<=et)(\\w*)(?=[(])");
 
     /** GetSet标志与前缀 */
     enum GetSetEnum{
