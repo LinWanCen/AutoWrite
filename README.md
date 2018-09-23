@@ -10,6 +10,10 @@
 1. 清空 files 文件夹
 2. 把要修改的源文件丢进去双击对应 .bat 文件
 
+## 直接修改剪切板
+1. 清空 files 文件夹
+2. 直接双击对应 .bat 文件
+
 ## 作为 IntelliJ IDEA 工具
 1. Ctrl + Alt + S 进入设置
 2. 选择 **Tools** 的 External Tools 添加进去，参数设置$FilePath$即可

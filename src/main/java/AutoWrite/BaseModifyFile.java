@@ -1,5 +1,7 @@
 package AutoWrite;
 
+import java.awt.*;
+import java.awt.datatransfer.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -48,9 +50,30 @@ public abstract class BaseModifyFile {
         int inPathLength = inPath.getAbsolutePath().length();
         if (inPath.isFile()) {
             inFileList.add(inPath);
-            inPathLength = inPath.getParentFile().getAbsolutePath().length();
+            File parentFile = inPath.getParentFile();
+            inPathLength = parentFile == null ? 0 : parentFile.getAbsolutePath().length();
         } else {
             BaseModifyFile.listDeep(inFileList, null, false, true, inPath);
+        }
+        Clipboard clipboard = null;
+        File clipFile = null;
+        if (inFileList.size() == 0) {
+            // 若文件个数为空则从剪切板获取
+            clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipFile = new File("clip.txt");
+            Transferable content = clipboard.getContents(null);
+            if (content.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                try (FileWriter fileWriter = new FileWriter(clipFile)) {
+                    String text = (String) content.getTransferData(DataFlavor.stringFlavor);
+                    fileWriter.write(text);
+                    inFileList.add(clipFile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+            charsetName = System.getProperty("file.encoding");
+            System.out.println(charsetName);
         }
         // endregion 输入路径
 
@@ -109,7 +132,21 @@ public abstract class BaseModifyFile {
                 System.err.println(" " + file.getAbsolutePath());
             }
         }
-        boolean delete = tempPath.delete();
+        tempPath.delete();
+        if (clipboard != null) {
+            try (FileReader fileReader = new FileReader(clipFile)) {
+                StringBuilder sb = new StringBuilder();
+                char[] cbuf = new char[1024];
+                while (fileReader.read(cbuf) > 0){
+                    sb.append(cbuf);
+                }
+                StringSelection selection = new StringSelection(sb.toString());
+                clipboard.setContents(selection, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            clipFile.delete();
+        }
     }
 
     /**
