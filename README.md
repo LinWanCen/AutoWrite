@@ -39,7 +39,7 @@ $SelectionEndColumn$
 运行参数：`[输入文件] [编码] [输出文件] [起始行] [结束行] [起始列] [结束列]`
 
 ## `AttributeAlign`
-XML 属性对齐  
+对齐 XML 属性  
 推荐设置为 IntelliJ IDEA 选择内容工具
 ```xml
     <id property="id" column="id"/>
