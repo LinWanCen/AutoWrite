@@ -32,10 +32,26 @@ $SelectionEndLine$
 $SelectionStartColumn$
 $SelectionEndColumn$
 ```
+一般程序都是行处理，所以最后两个参数可以不设置，bat 文件也不会传入
 
 
 # 基本程序介绍
 运行参数：`[输入文件] [编码] [输出文件] [起始行] [结束行] [起始列] [结束列]`
+
+## `AttributeAlign`
+XML 属性对齐  
+推荐设置为 IntelliJ IDEA 选择内容工具
+```xml
+    <id property="id" column="id"/>
+    <result property="userName" column="user_name"/>
+    <result property="class" column="class"/>
+```
+替换为
+```xml
+    <id     property="id"       column="id"       />
+    <result property="userName" column="user_name"/>
+    <result property="class"    column="class"    />
+```
 
 ## `POJODoc`
 把行末注释变为文档注释
