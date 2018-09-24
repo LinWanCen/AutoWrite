@@ -30,7 +30,7 @@ public class GetSetDoc extends AbstractModifyFile {
 
     @Override
     protected void modify(BufferedReader r, BufferedWriter w) throws Exception {
-        w.newLine();
+        w.write(lineSeparator);
         String line;
         // GetSet标志
         GetSetEnum getSetFlag = null;
@@ -107,7 +107,7 @@ public class GetSetDoc extends AbstractModifyFile {
             }
 
             w.write(line);
-            w.newLine();
+            w.write(lineSeparator);
         }
     }
 

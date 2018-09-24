@@ -32,7 +32,7 @@ public class POJODoc extends AbstractModifyFile {
                 line = sb.toString();
             }
             w.write(line);
-            w.newLine();
+            w.write(lineSeparator);
         }
     }
 

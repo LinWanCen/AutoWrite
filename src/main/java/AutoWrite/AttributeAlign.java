@@ -73,7 +73,7 @@ public class AttributeAlign extends AbstractModifyFile {
                         w.write(" ");
                     }
                 }
-                w.newLine();
+                w.write(lineSeparator);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
