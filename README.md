@@ -16,12 +16,26 @@
 
 ## 作为 IntelliJ IDEA 工具
 1. Ctrl + Alt + S 进入设置
-2. 选择 **Tools** 的 External Tools 添加进去，参数设置$FilePath$即可
+2. 选择 **Tools** 的 External Tools 添加进去，参数设置`$FilePath$`即可
 
 ![](img/IntelliJ%20IDEA%20External%20Tools.jpg)
 
+## 作为 IntelliJ IDEA 选择内容工具
+1. Ctrl + Alt + S 进入设置
+2. 选择 **Tools** 的 External Tools 添加进去，参数设置：
+```
+$FilePath$
+$FileEncoding$
+$FilePath$
+$SelectionStartLine$
+$SelectionEndLine$
+$SelectionStartColumn$
+$SelectionEndColumn$
+```
+
+
 # 基本程序介绍
-运行参数：`[输入文件] [编码] [输出文件]`
+运行参数：`[输入文件] [编码] [输出文件] [起始行] [结束行] [起始列] [结束列]`
 
 ## `POJODoc`
 把行末注释变为文档注释
@@ -81,7 +95,7 @@ get set 方法添加字段上的文档注释
 
 
 # 连续正则替换程序介绍
-运行参数：`正则编码 正则文件 [输入文件] [编码] [输出文件]`
+运行参数：`正则编码 正则文件 [输入文件] [编码] [输出文件] [起始行] [结束行] [起始列] [结束列]`
 
 ## `ReplaceAllMultiple`
 在正则文件中写好要替换的正则表达式和正则替换式列表，
@@ -126,3 +140,7 @@ $1$2$3$4\t$2\t$5\t$2.java:$5\t$6
 程序名\t行\t文件:行\t代码\n
 -------------------------------------------
 ```
+
+# 改进计划
+输出换行符参数化
+多文件多线程

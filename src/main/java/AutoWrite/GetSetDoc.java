@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class GetSetDoc extends AbstractModifyFile {
 
     public static void main(String[] args) {
-        new GetSetDoc().execute(args, 1, 2, 3);
+        new GetSetDoc().execute(args, 1, 2, 3, 4);
     }
 
     private static final String FIELD_REGEX = "[\\w ]* \\w*;";

@@ -1,1 +1,1 @@
-java AutoWrite.GetSetDoc %1 >log.txt 2>&1
+java AutoWrite.GetSetDoc %1 %2 %3 %4 %5 >log.txt 2>&1
