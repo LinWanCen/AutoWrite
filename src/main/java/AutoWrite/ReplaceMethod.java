@@ -68,7 +68,7 @@ public class ReplaceMethod extends AbstractModifyFile {
                 System.out.println(method);
             }
             w.write(line);
-            w.newLine();
+            w.write(lineSeparator);
         }
     }
 }

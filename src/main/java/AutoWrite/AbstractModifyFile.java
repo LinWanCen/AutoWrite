@@ -7,27 +7,50 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
- * 在主方法新建自身后运行execute(args, inNum, charsetNum, outNum)方法
+ * 在主方法新建自身后运行 execute 方法
  * <br>在args没有设置输入目录时默认 files 文件夹下所有文件，没有设置输出目录时默认替换源文件
  * <br>需重写protected void modify(BufferedReader r, BufferedWriter w) throws Exception {
  */
 public abstract class AbstractModifyFile {
-    public static String charsetName = "UTF-8";
+    public String charsetName = "UTF-8";
+    public String lineSeparator = "\r\n";
 
     /** 业务逻辑，需重写 */
     protected abstract void modify(BufferedReader r, BufferedWriter w) throws Exception;
 
     /** 读写逻辑，可重写 */
     protected void readWrite(File file, File tempFile) {
-        try (BufferedReader r = new BufferedReader(
-                new InputStreamReader(new FileInputStream(file), charsetName));
-             BufferedWriter w = new BufferedWriter(
-                     new OutputStreamWriter(new FileOutputStream(tempFile), charsetName))) {
+        try (InputStreamReader in = new InputStreamReader(new FileInputStream(file), charsetName);
+             BufferedReader r = new BufferedReader(in);
+             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(tempFile), charsetName);
+             BufferedWriter w = new BufferedWriter(out)) {
             // 业务逻辑，需重写
             modify(r, w);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /** 获取换行符 */
+    public String getLineSeparator(File file){
+        try (InputStreamReader in = new InputStreamReader(new FileInputStream(file), charsetName);
+             BufferedReader r = new BufferedReader(in)) {
+            char[] cbuf = new char[3072];
+            int  len;
+            while ((len = r.read(cbuf)) > 0){
+                String s = new String(cbuf, 0 , len);
+                if (s.contains("\r\n")) {
+                    return "\r\n"; // Windows
+                } else if (s.contains("\n")) {
+                    return "\n"; // Unix
+                } else if (s.contains("\r")) {
+                    return "\r"; // Mac
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return lineSeparator;
     }
 
     /** 执行方法 */
@@ -99,6 +122,25 @@ public abstract class AbstractModifyFile {
         }
         // endregion 输出路径
 
+        // region 截取处理
+        int startLine = 0;
+        int endLine = 0;
+        int startColumn = 0;
+        int endColumn = 0;
+        if (args.length >= subNum) {
+            startLine = Integer.parseInt(args[subNum - 1]);
+        }
+        if (args.length >= subNum + 1) {
+            endLine = Integer.parseInt(args[subNum]);
+        }
+        if (args.length >= subNum + 2) {
+            startColumn = Integer.parseInt(args[subNum + 1]);
+        }
+        if (args.length >= subNum + 3) {
+            endColumn = Integer.parseInt(args[subNum + 2]);
+        }
+        // endregion 截取处理
+
         // 临时文件以免边读边写
         String parent = inPath.getParent();
         File tempPath = new File(parent, "AutoWriteTemp");
@@ -108,26 +150,15 @@ public abstract class AbstractModifyFile {
 
         for (int i = 0; i < inFileList.size(); i++) {
             File file = inFileList.get(i);
+            lineSeparator = getLineSeparator(file);
             System.out.println(String.format("%s/%s files:%s", i + 1, inFileList.size(), file.getName()));
             String child = file.getAbsolutePath().substring(inPathLength);
             File outFile = new File(tempPath, child);
             outFile.getParentFile().mkdirs();
             File inFile = file;
-            // region 输入部分处理
-            int startLine = 0;
-            int endLine = 0;
-            int startColumn = 0;
-            int endColumn = 0;
-            if (args.length >= subNum + 1) {
-                startLine = Integer.parseInt(args[subNum - 1]);
-                endLine = Integer.parseInt(args[subNum]);
-                if (args.length >= subNum + 3) {
-                    startColumn = Integer.parseInt(args[subNum + 1]);
-                    endColumn = Integer.parseInt(args[subNum + 2]);
-                }
-
+            // region 输入截取处理
+            if (startLine > 0 ) {
                 inFile = new File("subFile.txt");
-
                 try (InputStreamReader in = new InputStreamReader(new FileInputStream(file), charsetName);
                      BufferedReader r = new BufferedReader(in);
                      OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(inFile), charsetName);
@@ -147,7 +178,7 @@ public abstract class AbstractModifyFile {
                             line = startColumn == 0 ? line : line.substring(0, endColumn - 1);
                         }
                         w.write(line);
-                        w.newLine();
+                        w.write(lineSeparator);
                         if (row == endLine) {
                             break;
                         }
@@ -157,20 +188,20 @@ public abstract class AbstractModifyFile {
                 }
                 System.out.println(" input subFile.txt");
             }
-            // endregion 输入部分处理
+            // endregion 输入截取处理
+
             // 读写逻辑，可重写
             readWrite(inFile, outFile);
 
-            // region 输出部分处理
+            // region 输出截取处理
             if (startLine > 0) {
-                try (BufferedReader r = new BufferedReader(
-                        new InputStreamReader(new FileInputStream(file), charsetName));
-                     BufferedWriter w = new BufferedWriter(
-                             new OutputStreamWriter(new FileOutputStream(inFile), charsetName))) {
+                try (InputStreamReader in = new InputStreamReader(new FileInputStream(file), charsetName);
+                     BufferedReader r = new BufferedReader(in);
+                     OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(inFile), charsetName);
+                     BufferedWriter w = new BufferedWriter(out)) {
                     byte[] bytes = Files.readAllBytes(outFile.toPath());
                     String s = new String(bytes, charsetName);
-                    // TODO 子方法写入换行导致，待重构
-                    s = s.replaceFirst("\r\n$", "");
+                    s = s.replaceFirst(lineSeparator + "$", "");
                     String line;
                     int row = 0;
                     while ((line = r.readLine()) != null) {
@@ -179,16 +210,16 @@ public abstract class AbstractModifyFile {
                             w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
                             w.write(s);
                             w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
-                            w.newLine();
+                            w.write(lineSeparator);
                         } else if (row == startLine) {
                             w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
                             w.write(s);
                         } else if (row == endLine) {
                             w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
-                            w.newLine();
+                            w.write(lineSeparator);
                         } else if (row < startLine || row > endLine) {
                             w.write(line);
-                            w.newLine();
+                            w.write(lineSeparator);
                         }
                     }
                     outFile = inFile;
@@ -197,7 +228,7 @@ public abstract class AbstractModifyFile {
                 }
                 System.out.println(" output subFile.txt");
             }
-            // endregion 输出部分处理
+            // endregion 输出截取处理
 
             // 输出路径处理：如果不是默认修改源文件(使用原 files)
             if (outFileName != null) {
