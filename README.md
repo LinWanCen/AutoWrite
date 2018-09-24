@@ -16,7 +16,7 @@
 
 ## 作为 IntelliJ IDEA 工具
 1. Ctrl + Alt + S 进入设置
-2. 选择 **Tools** 的 External Tools 添加进去，参数设置`$FilePath$`即可
+2. 选择 **Tools** 的 External Tools 添加进去，参数设置`$FilePath$ $FileEncoding$`即可
 
 ![](img/IntelliJ%20IDEA%20External%20Tools.jpg)
 
