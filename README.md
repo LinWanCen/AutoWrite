@@ -96,7 +96,7 @@ get set 方法添加字段上的文档注释
 
 
 ## `ReplaceMethod`
-把重写方法的`return null;`替换为带方法本身的代码
+替换重写方法的`return null;`为带方法本身的代码
 ```java
    public String abc(String key) {
        return null;

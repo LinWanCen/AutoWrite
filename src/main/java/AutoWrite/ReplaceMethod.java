@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 把重写方法的return null;替换为带方法本身的代码
+ * 替换重写方法的return null;为带方法本身的代码
  * 例如：
  * <pre>
  * public String abc(String key) {
