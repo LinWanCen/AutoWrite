@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * <br>在args没有设置输入目录时默认 files 文件夹下所有文件，没有设置输出目录时默认替换源文件
  * <br>需重写protected void modify(BufferedReader r, BufferedWriter w) throws Exception {
  */
-public abstract class BaseModifyFile {
+public abstract class AbstractModifyFile {
     public static String charsetName = "UTF-8";
 
     /** 业务逻辑，需重写 */
@@ -53,7 +53,7 @@ public abstract class BaseModifyFile {
             File parentFile = inPath.getParentFile();
             inPathLength = parentFile == null ? 0 : parentFile.getAbsolutePath().length();
         } else {
-            BaseModifyFile.listDeep(inFileList, null, false, true, inPath);
+            AbstractModifyFile.listDeep(inFileList, null, false, true, inPath);
         }
         Clipboard clipboard = null;
         File clipFile = null;

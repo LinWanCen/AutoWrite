@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * 连续正则替换
  */
-public class ReplaceAllMultiple extends BaseModifyFile {
+public class ReplaceAllMultiple extends AbstractModifyFile {
     private static final String DISABLE_PREFIX = "//";
     private static final String PARAM_LOOP = "loop";
     private static final String PARAM_TITLE = "title";
