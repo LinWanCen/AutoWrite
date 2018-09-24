@@ -32,6 +32,7 @@ public class AttributeAlign extends AbstractModifyFile {
         for (String line : lines) {
             if (line.startsWith("<?")
                     || !line.contains("=\"")
+                    || !line.contains("/>")
                     || line.matches("^ *<!.*")) {
                 list.add(Collections.singletonList(line));
                 continue;
@@ -41,9 +42,9 @@ public class AttributeAlign extends AbstractModifyFile {
             line = line.replaceAll("(\" +)(\\w)", "$1\27$2");
             line = line.replaceAll("(\" *)(/>)", "$1\27$2");
             line = line.replaceAll("(.)(-->)", "$1\27$2");
-            if (!line.contains("<")) {
-                line = line.replaceAll("(^ +)(\\w)", "$1\27$2");
-            }
+            // if (!line.contains("<")) {
+            //     line = line.replaceAll("(^ +)(\\w)", "$1\27$2");
+            // }
             String[] split = line.split("\27");
             List<String> ls = Arrays.asList(split);
             System.out.println(" "+ ls);
