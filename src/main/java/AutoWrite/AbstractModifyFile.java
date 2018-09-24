@@ -3,6 +3,7 @@ package AutoWrite;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
@@ -18,8 +19,10 @@ public abstract class AbstractModifyFile {
 
     /** 读写逻辑，可重写 */
     protected void readWrite(File file, File tempFile) {
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(file), charsetName));
-             BufferedWriter w = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), charsetName))) {
+        try (BufferedReader r = new BufferedReader(
+                new InputStreamReader(new FileInputStream(file), charsetName));
+             BufferedWriter w = new BufferedWriter(
+                     new OutputStreamWriter(new FileOutputStream(tempFile), charsetName))) {
             // 业务逻辑，需重写
             modify(r, w);
         } catch (Exception e) {
@@ -28,7 +31,7 @@ public abstract class AbstractModifyFile {
     }
 
     /** 执行方法 */
-    protected void execute(String[] args, int inNum, int charsetNum, int outNum) {
+    protected void execute(String[] args, int inNum, int charsetNum, int outNum, int subNum) {
         // 如果设置了编码
         if (args.length >= charsetNum) {
             charsetName = args[charsetNum - 1];
@@ -68,12 +71,10 @@ public abstract class AbstractModifyFile {
                     fileWriter.write(text);
                     inFileList.add(clipFile);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    return;
+                    throw new RuntimeException(e);
                 }
             }
             charsetName = System.getProperty("file.encoding");
-            System.out.println(charsetName);
         }
         // endregion 输入路径
 
@@ -109,10 +110,94 @@ public abstract class AbstractModifyFile {
             File file = inFileList.get(i);
             System.out.println(String.format("%s/%s files:%s", i + 1, inFileList.size(), file.getName()));
             String child = file.getAbsolutePath().substring(inPathLength);
-            File tempFile = new File(tempPath, child);
-            tempFile.getParentFile().mkdirs();
+            File outFile = new File(tempPath, child);
+            outFile.getParentFile().mkdirs();
+            File inFile = file;
+            // region 输入部分处理
+            int startLine = 0;
+            int endLine = 0;
+            int startColumn = 0;
+            int endColumn = 0;
+            if (args.length >= subNum + 1) {
+                startLine = Integer.parseInt(args[subNum - 1]);
+                endLine = Integer.parseInt(args[subNum]);
+                if (args.length >= subNum + 3) {
+                    startColumn = Integer.parseInt(args[subNum + 1]);
+                    endColumn = Integer.parseInt(args[subNum + 2]);
+                }
+
+                inFile = new File("subFile.txt");
+
+                try (InputStreamReader in = new InputStreamReader(new FileInputStream(file), charsetName);
+                     BufferedReader r = new BufferedReader(in);
+                     OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(inFile), charsetName);
+                     BufferedWriter w = new BufferedWriter(out)) {
+                    String line;
+                    int row = 0;
+                    while ((line = r.readLine()) != null) {
+                        row++;
+                        if (row < startLine) {
+                            continue;
+                        }
+                        if (row == startLine && startLine == endLine) {
+                            line = startColumn == 0 ? line : line.substring(startColumn - 1, endColumn - 1);
+                        } else if (row == startLine) {
+                            line = startColumn == 0 ? line : line.substring(startColumn - 1);
+                        } else if (row == endLine) {
+                            line = startColumn == 0 ? line : line.substring(0, endColumn - 1);
+                        }
+                        w.write(line);
+                        w.newLine();
+                        if (row == endLine) {
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(" input subFile.txt");
+            }
+            // endregion 输入部分处理
             // 读写逻辑，可重写
-            readWrite(file, tempFile);
+            readWrite(inFile, outFile);
+
+            // region 输出部分处理
+            if (startLine > 0) {
+                try (BufferedReader r = new BufferedReader(
+                        new InputStreamReader(new FileInputStream(file), charsetName));
+                     BufferedWriter w = new BufferedWriter(
+                             new OutputStreamWriter(new FileOutputStream(inFile), charsetName))) {
+                    byte[] bytes = Files.readAllBytes(outFile.toPath());
+                    String s = new String(bytes, charsetName);
+                    // TODO 子方法写入换行导致，待重构
+                    s = s.replaceFirst("\r\n$", "");
+                    String line;
+                    int row = 0;
+                    while ((line = r.readLine()) != null) {
+                        row++;
+                        if (row == startLine && startLine == endLine) {
+                            w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
+                            w.write(s);
+                            w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
+                            w.newLine();
+                        } else if (row == startLine) {
+                            w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
+                            w.write(s);
+                        } else if (row == endLine) {
+                            w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
+                            w.newLine();
+                        } else if (row < startLine || row > endLine) {
+                            w.write(line);
+                            w.newLine();
+                        }
+                    }
+                    outFile = inFile;
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println(" output subFile.txt");
+            }
+            // endregion 输出部分处理
 
             // 输出路径处理：如果不是默认修改源文件(使用原 files)
             if (outFileName != null) {
@@ -125,7 +210,7 @@ public abstract class AbstractModifyFile {
                 }
             }
             if (file.exists()) file.delete();
-            boolean b = tempFile.renameTo(file);
+            boolean b = outFile.renameTo(file);
             if (b) {
                 System.out.println(" " + file.getAbsolutePath());
             } else {
@@ -134,16 +219,13 @@ public abstract class AbstractModifyFile {
         }
         tempPath.delete();
         if (clipboard != null) {
-            try (FileReader fileReader = new FileReader(clipFile)) {
-                StringBuilder sb = new StringBuilder();
-                char[] cbuf = new char[1024];
-                while (fileReader.read(cbuf) > 0){
-                    sb.append(cbuf);
-                }
-                StringSelection selection = new StringSelection(sb.toString());
+            try {
+                byte[] bytes = Files.readAllBytes(clipFile.toPath());
+                String s = new String(bytes, charsetName);
+                StringSelection selection = new StringSelection(s);
                 clipboard.setContents(selection, null);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
             clipFile.delete();
         }

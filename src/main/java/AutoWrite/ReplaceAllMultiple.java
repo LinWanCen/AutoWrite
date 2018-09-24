@@ -96,7 +96,7 @@ public class ReplaceAllMultiple extends AbstractModifyFile {
         }
         // endregion 正则列表文件
 
-        new ReplaceAllMultiple().execute(args, 3, 4, 5);
+        new ReplaceAllMultiple().execute(args, 3, 4, 5, 6);
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class ReplaceMethod extends AbstractModifyFile {
 
     public static void main(String[] args) {
-        new ReplaceMethod().execute(args, 1, 2, 3);
+        new ReplaceMethod().execute(args, 1, 2, 3, 4);
     }
 
     private static final String METHOD_REGEX = ".* .*\\(.*\\).*\\{";

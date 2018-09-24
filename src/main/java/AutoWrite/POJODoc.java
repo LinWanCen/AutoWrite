@@ -9,7 +9,7 @@ import java.io.BufferedWriter;
 public class POJODoc extends AbstractModifyFile {
 
     public static void main(String[] args) {
-        new POJODoc().execute(args, 1, 2, 3);
+        new POJODoc().execute(args, 1, 2, 3, 4);
     }
 
     @Override
