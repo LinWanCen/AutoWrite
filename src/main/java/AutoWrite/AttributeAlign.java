@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * XML 属性对齐
+ * 对齐 XML 属性
  */
 public class AttributeAlign extends AbstractModifyFile {
 
