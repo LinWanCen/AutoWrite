@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 /**
  * get set 方法添加字段上的文档注释
  */
-public class GetSetDoc extends BaseModifyFile {
+public class GetSetDoc extends AbstractModifyFile {
 
     public static void main(String[] args) {
         new GetSetDoc().execute(args, 1, 2, 3);

@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 /**
  * 把行末注释变为doc注释
  */
-public class POJODoc extends BaseModifyFile {
+public class POJODoc extends AbstractModifyFile {
 
     public static void main(String[] args) {
         new POJODoc().execute(args, 1, 2, 3);
