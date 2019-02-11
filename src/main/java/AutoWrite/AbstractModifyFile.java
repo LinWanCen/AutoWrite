@@ -141,9 +141,8 @@ public abstract class AbstractModifyFile {
         }
         // endregion 截取处理
 
-        // 临时文件以免边读边写
-        String parent = inPath.getParent();
-        File tempPath = new File(parent, "AutoWriteTemp");
+        // 临时文件以免边读边写，放到工具目录以免其他程序捕捉影响性能
+        File tempPath = new File("AutoWriteTemp");
         if (!tempPath.exists()) {
             boolean mkdirs = tempPath.mkdirs();
         }
@@ -220,6 +219,8 @@ public abstract class AbstractModifyFile {
                             w.write(lineSeparator);
                         }
                     }
+                    // 修复漏删文件
+                    outFile.delete();
                     outFile = inFile;
                 } catch (Exception e) {
                     throw new RuntimeException(e);
