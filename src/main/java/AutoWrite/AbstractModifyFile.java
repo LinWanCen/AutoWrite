@@ -139,6 +139,13 @@ public abstract class AbstractModifyFile {
         if (args.length >= subNum + 3) {
             endColumn = Integer.parseInt(args[subNum + 2]);
         }
+        // 若没有选择区域当作选择整个文件
+        if (startLine == endLine && startColumn == endColumn) {
+            startLine = 0;
+            endLine = 0;
+            startColumn = 0;
+            endColumn = 0;
+        }
         // endregion 截取处理
 
         // 临时文件以免边读边写，放到工具目录以免其他程序捕捉影响性能
