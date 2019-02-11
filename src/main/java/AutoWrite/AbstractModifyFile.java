@@ -206,19 +206,17 @@ public abstract class AbstractModifyFile {
                     int row = 0;
                     while ((line = r.readLine()) != null) {
                         row++;
-                        if (row == startLine && startLine == endLine) {
-                            w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
-                            w.write(s);
-                            w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
-                            w.write(lineSeparator);
-                        } else if (row == startLine) {
-                            w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
-                            w.write(s);
-                        } else if (row == endLine) {
-                            w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
-                            w.write(lineSeparator);
-                        } else if (row < startLine || row > endLine) {
+                        if (row < startLine || row > endLine) {
                             w.write(line);
+                            w.write(lineSeparator);
+                            continue;
+                        }
+                        if (row == startLine) {
+                            w.write(startColumn == 0 ? "" : line.substring(0, startColumn - 1));
+                            w.write(s);
+                        }
+                        if (row == endLine) {
+                            w.write(startColumn == 0 ? "" : line.substring(endColumn - 1));
                             w.write(lineSeparator);
                         }
                     }
@@ -241,12 +239,7 @@ public abstract class AbstractModifyFile {
                 }
             }
             if (file.exists()) file.delete();
-            boolean b = outFile.renameTo(file);
-            if (b) {
-                System.out.println(" " + file.getAbsolutePath());
-            } else {
-                System.err.println(" " + file.getAbsolutePath());
-            }
+            outFile.renameTo(file);
         }
         tempPath.delete();
         if (clipboard != null) {
