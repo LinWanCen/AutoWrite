@@ -23,6 +23,11 @@
 
 ![](img/IntelliJ%20IDEA%20External%20Tools.jpg)
 
+有道翻译配置：  
+程序填 Java  
+参数设置 AutoWrite.YouDaoUtils $SelectedText$  
+工作目录选择 class 文件的上级目录  
+
 ## 作为 IntelliJ IDEA 选择内容工具
 1. Ctrl + Alt + S 进入设置
 2. 选择 **Tools** 的 External Tools 添加进去，参数设置：
