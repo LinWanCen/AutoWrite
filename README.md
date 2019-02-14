@@ -56,6 +56,20 @@ $SelectionEndColumn$
     <result property="class"    column="class"    />
 ```
 
+## `MarkdownTableAlign`
+对齐 markdown 表格
+```md
+| 中英文表格对齐测试 | A |
+|   ---| ---- |
+| BBBBBBBBBBBB | 表|
+```
+替换为
+```md
+| 中英文表格对齐测试 | A    |
+| ------------------ | ---- |
+| BBBBBBBBBBBB       | 表   |
+```
+
 ## `POJODoc`
 把行末注释变为文档注释
 ```java
