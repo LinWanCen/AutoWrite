@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 
 /**
- * 把行末注释变为doc注释
+ * 行末注释变为文档注释
  */
 public class POJODoc extends AbstractModifyFile {
 
