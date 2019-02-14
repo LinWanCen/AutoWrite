@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -14,10 +15,11 @@ import java.util.regex.Pattern;
  */
 public class ReplaceAllMultiple extends AbstractModifyFile {
     private static final String DISABLE_PREFIX = "//";
-    private static final String PARAM_LOOP = "loop";
     private static final String PARAM_TITLE = "title";
     private static final String PARAM_FOOTER = "footer";
     private static final String PARAM_CASE = "case";
+    private static final String PARAM_LOOP = "loop";
+    private static final String PARAM_GET = "get";
     private static final int PARAM_OFFSET = 0;
     private static final int REGEXP_OFFSET = 1;
     private static final int REPLACEMENT_OFFSET = 2;
@@ -36,6 +38,8 @@ public class ReplaceAllMultiple extends AbstractModifyFile {
         private boolean footer;
         /** 是否循环 */
         private boolean loop;
+        /** 是否正则获取 */
+        private boolean get;
 
         /** 正则表达式 */
         private String regex;
@@ -91,6 +95,7 @@ public class ReplaceAllMultiple extends AbstractModifyFile {
                 flags += Pattern.CASE_INSENSITIVE;
             }
             reClass.pattern = Pattern.compile(reClass.regex, flags);
+            reClass.get = reClass.param.contains(PARAM_GET);
             reClass.loop = reClass.param.contains(PARAM_LOOP);
             reClassList.add(reClass);
         }
@@ -134,11 +139,23 @@ public class ReplaceAllMultiple extends AbstractModifyFile {
                 // 缓存替换前的字符串
                 String temp;
                 int count = 1;
-                do {
-                    temp = s;
-                    System.out.print(" " + count++);
-                    s = reClass.pattern.matcher(s).replaceAll(reClass.replacement);
-                } while (reClass.loop && !s.equals(temp)); // 若循环，替换到替换前后一致为止
+                if (reClass.get) {
+                    Matcher matcher = reClass.pattern.matcher(s);
+                    StringBuilder sb = new StringBuilder();
+                    if (matcher.find()) {
+                        sb.append(matcher.group());
+                    }
+                    while (matcher.find()) {
+                        sb.append(lineSeparator).append(matcher.group());
+                    }
+                    s = sb.toString();
+                } else {
+                    do {
+                        temp = s;
+                        System.out.print(" " + count++);
+                        s = reClass.pattern.matcher(s).replaceAll(reClass.replacement);
+                    } while (reClass.loop && !s.equals(temp)); // 若循环，替换到替换前后一致为止
+                }
                 System.out.println();
             }
             // endregion【核心】正则替换
