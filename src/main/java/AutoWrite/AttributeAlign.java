@@ -50,7 +50,7 @@ public class AttributeAlign extends AbstractModifyFile {
             System.out.println(" "+ ls);
             list.add(ls);
             for (int i = 0; i < split.length; i++) {
-                int length = split[i].length();
+                int length = AlignUtils.displayLen(split[i]);
                 if (colLenMax.size() < i+1) {
                     colLenMax.add(length);
                     continue;
@@ -69,7 +69,7 @@ public class AttributeAlign extends AbstractModifyFile {
                     if (colLenMax.size() < i + 1) {
                         continue;
                     }
-                    int len = colLenMax.get(i) - s.length();
+                    int len = colLenMax.get(i) - AlignUtils.displayLen(s);
                     for (int j = 0; j < len; j++) {
                         w.write(" ");
                     }

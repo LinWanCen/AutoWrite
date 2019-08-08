@@ -40,8 +40,7 @@ public class MarkdownTableAlign extends AbstractModifyFile {
             System.out.println(" "+ ls);
             list.add(ls);
             for (int i = 0; i < split.length; i++) {
-                // 加上占两个空格大小的字符长度
-                int length = split[i].length() + split[i].replaceAll("[\\u0000-\\u00FF]","").length();
+                int length = AlignUtils.displayLen(split[i]);
                 if (colLenMax.size() < i+1) {
                     colLenMax.add(length);
                     continue;
@@ -64,7 +63,7 @@ public class MarkdownTableAlign extends AbstractModifyFile {
                     if (colLenMax.size() < i + 1) {
                         continue;
                     }
-                    int len = colLenMax.get(i) - s.length() - s.replaceAll("[\\u0000-\\u00FF]","").length();
+                    int len = colLenMax.get(i)  -AlignUtils.displayLen(s);
                     for (int j = 0; j < len; j++) {
                         if (ishr) {
                             w.write("-");
