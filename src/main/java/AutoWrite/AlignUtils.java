@@ -1,15 +1,12 @@
 package AutoWrite;
 
+import java.util.regex.Pattern;
+
 public class AlignUtils {
 
-    /** Chinese, Japanese, Korean and Vietnamese char len = 2 */
+    public static final Pattern LEN_1_PATTERN = Pattern.compile("[\\u0000-\\u00FF]");
+
     public static int displayLen(String s) {
-        int len = s.length();
-        for (int i = 0; i < s.length(); i++) {
-            if (Character.isIdeographic(s.charAt(i))) {
-                len++;
-            }
-        }
-        return len;
+        return s.length() + LEN_1_PATTERN.matcher(s).replaceAll("").length();
     }
 }
