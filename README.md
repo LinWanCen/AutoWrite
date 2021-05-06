@@ -23,10 +23,20 @@
 
 ![](img/IntelliJ%20IDEA%20External%20Tools.jpg)
 
-有道翻译配置：  
-程序填 Java  
-参数设置 AutoWrite.YouDaoUtils $SelectedText$  
-工作目录选择 class 文件的上级目录  
+有道翻译配置：
+1. 程序填 Java
+2. 参数设置，配一个默认文件来达到不修改文件的目的
+```
+AutoWrite.YouDaoTranslation 
+$FilePath$
+$FileEncoding$
+lastTranslation.txt
+$SelectionStartLine$
+$SelectionEndLine$
+$SelectionStartColumn$
+$SelectionEndColumn$
+```
+3. 工作目录选择 class 文件的上级目录
 
 ## 作为 IntelliJ IDEA 选择内容工具
 1. Ctrl + Alt + S 进入设置
@@ -116,7 +126,6 @@ get set 方法添加字段上的文档注释
     }
 ```
 
-
 ## `ReplaceMethod`
 替换重写方法的`return null;`为带方法本身的代码
 ```java
@@ -146,7 +155,7 @@ get set 方法添加字段上的文档注释
 4. 横线分割，无用
 
 目前参数有五个，分别是：  
-get:    正则获取  
+get:    正则获取，正则替换式变为组索引（第几个括号内匹配到的内容）
 loop:   替换到替换前后一致为止  
 title:  在文档开始添加 正则替换式 解码后的文本，换行符自行添加  
 footer: 在文档结尾添加 正则替换式 解码后的文本，换行符自行添加  

@@ -141,9 +141,18 @@ public class ReplaceAllMultiple extends AbstractModifyFile {
                 int count = 1;
                 if (reClass.get) {
                     Matcher matcher = reClass.pattern.matcher(s);
+                    int g = 0;
+                    try {
+                        // 组索引（第几个括号内匹配到的内容）
+                        if (reClass.replacement.length() > 0) {
+                            g = Integer.parseInt(reClass.replacement);
+                        }
+                    } catch (Exception ignored) {
+                        // Use default: 0 整个模式匹配
+                    }
                     StringBuilder sb = new StringBuilder();
                     if (matcher.find()) {
-                        sb.append(matcher.group());
+                        sb.append(matcher.group(g));
                     }
                     while (matcher.find()) {
                         sb.append(lineSeparator).append(matcher.group());

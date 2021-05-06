@@ -67,19 +67,16 @@ public abstract class AbstractModifyFile {
             inFilesName[0] = args[inNum - 1];
         }
         File inPath = new File(inFilesName[0]);
-        // 输入路径或文件不存在则退出
-        if (!inPath.exists()) {
-            System.err.println(inPath.getAbsolutePath() + " is not exists");
-            return;
-        }
         ArrayList<File> inFileList = new ArrayList<>();
         int inPathLength = inPath.getAbsolutePath().length();
-        if (inPath.isFile()) {
-            inFileList.add(inPath);
-            File parentFile = inPath.getParentFile();
-            inPathLength = parentFile == null ? 0 : parentFile.getAbsolutePath().length();
-        } else {
-            AbstractModifyFile.listDeep(inFileList, null, false, true, inPath);
+        if (inPath.exists()) {
+            if (inPath.isFile()) {
+                inFileList.add(inPath);
+                File parentFile = inPath.getParentFile();
+                inPathLength = parentFile == null ? 0 : parentFile.getAbsolutePath().length();
+            } else {
+                AbstractModifyFile.listDeep(inFileList, null, false, true, inPath);
+            }
         }
         Clipboard clipboard = null;
         File clipFile = null;
